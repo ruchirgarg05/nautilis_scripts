@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpu-base-0-3
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: gpu-container
+        image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/prp:latest
+        resources:
+          limits:
+            memory: 20Gi
+            cpu : "8"
+            nvidia.com/gpu: "1"
+          requests:
+            memory: 20Gi
+            cpu : "8"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+          - mountPath: /base_vol
+            name: base-vol
+        env:
+        - name: GIT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: harshv834-gitlab
+              key: user
+        - name: GIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harshv834-gitlab
+              key: password
+        command: ["/bin/sh", "-c"]
+        args:
+          - cd /base_vol/sr-fca/sr_fca;
+            python ifca_comparison.py
+            # # git clone https://$(GIT_USERNAME):$(GIT_PASSWORD)@gitlab.nrp-nautilus.io/harshv834/nautilus-scripts;
+            # cd nautilus-scripts;
+            # sh hello_world.sh
+      restartPolicy: Never
+      volumes:
+        - name: base-vol
+          persistentVolumeClaim:
+            claimName: base-vol
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                - us-west
+
+

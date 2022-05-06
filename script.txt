@@ -1,0 +1,5 @@
+kubectl exec -it -n bansal-labs <POD_NAME>  -- /bin/bash
+# Port forwarding
+jupyter-lab --ip=0.0.0.0
+kubectl port-forward <POD_NAME> 8888:8888 -n bansal-labs
+kubectl create -f deployment_copy.yaml -n bansal-labs
