@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: access-pvc-pod
+spec:
+  containers:
+  - name: access-pvc-container
+    image: busybox
+    command: ["tail", "-f", "/dev/null"]
+    volumeMounts:
+    - name: base-vol
+      mountPath: /mnt
+  volumes:
+  - name: base-vol
+    persistentVolumeClaim:
+      claimName: base-vol
+    
