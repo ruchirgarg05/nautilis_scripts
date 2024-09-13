@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gpu-dep20
+  name: gpu-dep22
   labels:
-    k8s-app: gpu-dep20
+    k8s-app: gpu-dep22
 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: gpu-dep20
+      k8s-app: gpu-dep22
   template:
     metadata:
       labels:
-        k8s-app: gpu-dep20
+        k8s-app: gpu-dep22
     spec:
       containers:
       - name: gpu-container
